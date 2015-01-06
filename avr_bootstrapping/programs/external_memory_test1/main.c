@@ -24,6 +24,8 @@ const PROGMEM uint8_t[EXT_MEM_LOAD_ARRAY_SIZE_BYTES] = {
 uint8_t * ext_mem_ptr;
 uint8_t ext_mem_error;
 /* function prototypes */
+static inline void init_ext_mem(void);
+
 
 int main(void){
 
@@ -31,7 +33,8 @@ int main(void){
     DDRB |= (1<<PD1); //TX pin init to output
     DDRE |= (1<<PE2); //debug LED
     uart0_init(UART_BAUD_SELECT(BAUD, F_CPU));
-  
+    
+    init_ext_mem(); 
     
     ext_mem_ptr = (uint8_t *)(EXT_MEM_START_ADDR);
     uint8_t loop_addr_index = 255;
@@ -61,7 +64,9 @@ int main(void){
 }
 
 /* function bodies */
-
+static inline void init_ext_mem(void){
+    MCUCR |= (1<<SRE); //enable external memory
+}
 
 
 /* Interrupt Service Routines */
