@@ -6,7 +6,7 @@
 
 MCU   = atmega8515 
 F_CPU = 1000000
-BAUD = 9600
+BAUD = 4800
 ## Also try BAUD = 19200 or 38400 if you're feeling lucky.
 
 ## This is where your main() routine lives 
@@ -33,11 +33,11 @@ UART_LIB_FLAGS = -DUART_RX0_BUFFER_SIZE=16 -DUART_TX0_BUFFER_SIZE=16
 ##########        (Can override.  See bottom of file.)          ##########
 ##########------------------------------------------------------##########
 
-PROGRAMMER_TYPE = usbtiny
-#PROGRAMMER_TYPE = stk500v2
+#PROGRAMMER_TYPE = usbtiny
+PROGRAMMER_TYPE = stk500v2
 # extra arguments to avrdude: baud rate, chip type, -F flag, etc.
 PROGRAMMER_ARGS = 
-#PROGRAMMER_ARGS = -P /dev/ttyUSB0 	
+PROGRAMMER_ARGS = -P /dev/ttyUSB0 	
 
 ##########------------------------------------------------------##########
 ##########                   Makefile Magic!                    ##########
@@ -161,6 +161,10 @@ flash_109: PROGRAMMER_TYPE = avr109
 flash_109: PROGRAMMER_ARGS = -b 9600 -P /dev/ttyUSB0
 flash_109: flash
 
+flash_stk500v2: PROGRAMMER_TYPE = stk500v2
+flash_stk500v2: PROGRAMMER_ARGS = -P /dev/ttyUSB0
+flash_stk500v2: flash
+
 ##########------------------------------------------------------##########
 ##########       Fuse settings and suitable defaults            ##########
 ##########------------------------------------------------------##########
@@ -185,7 +189,8 @@ show_fuses:
 	$(AVRDUDE) -c $(PROGRAMMER_TYPE) -p $(MCU) $(PROGRAMMER_ARGS) -nv	
 
 ## Called with no extra definitions, sets to defaults
-set_default_fuses:  FUSE_STRING = -U lfuse:w:$(LFUSE):m -U hfuse:w:$(HFUSE):m -U efuse:w:$(EFUSE):m 
+set_default_fuses:  FUSE_STRING = -U lfuse:w:$(LFUSE):m -U hfuse:w:$(HFUSE):m 
+#set_default_fuses:  -U efuse:w:$(EFUSE):m 
 set_default_fuses:  fuses
 
 
